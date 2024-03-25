@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="Parallel Tests" parallel = "methods" thread-count = "2">
+	<test name="Orange HRM Automation" preserve-order="true" >
+		<classes>
+			<class name="com.qa.automation.testCases.ParallelExecutionDemo" />
+			
+		</classes>
+	</test>
+</suite>
+ 

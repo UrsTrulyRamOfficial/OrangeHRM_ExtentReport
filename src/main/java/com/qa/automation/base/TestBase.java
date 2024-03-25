@@ -15,11 +15,18 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.safari.SafariDriver;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class TestBase {
 
@@ -33,14 +40,49 @@ public class TestBase {
 
 	@SuppressWarnings("deprecation")
 	public void driverInitialization() {
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--incognito");
-		//driver = new ChromeDriver();
-		driver = new ChromeDriver(options);
-		driver.get(prop.getProperty("appUrl"));
-		driver.manage().timeouts().pageLoadTimeout(Integer.parseInt(prop.getProperty("pageLoadTime")), TimeUnit.SECONDS);
+		String browser = prop.getProperty("browserName");
+		
+		switch (browser) {
+		case "chrome":
+			if (prop.getProperty("browserMode").equalsIgnoreCase("normal")) {
+				ChromeOptions options = new ChromeOptions();
+				options.addArguments("--no-sandbox");
+				options.addArguments("--incognito");
+				driver = new ChromeDriver(options);
+			}
+
+			if (prop.getProperty("browserMode").equalsIgnoreCase("headless")) {
+				ChromeOptions options = new ChromeOptions();
+				options.addArguments("--headless");
+				driver = new ChromeDriver(options);
+			}
+			break;
+		
+		case "Firefox":
+		    System.setProperty("webdriver.gecko.driver", System.getProperty("user.dir") + "//externalLibraries//firefoxDriver.exe");
+			WebDriverManager.firefoxdriver().setup();
+			driver = new FirefoxDriver();
+			break;
+			
+		case "IE":
+			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "//externalLibraries//IEDriverServer.exe");
+			driver = new InternetExplorerDriver();
+			break;
+			
+		case "Safari":
+			driver = new SafariDriver();
+			break;
+			
+		case "Edge":
+			System.setProperty("webdriver.edge.driver", System.getProperty("user.dir") + "//externalLibraries//msedgedriver.exe");
+			driver = new EdgeDriver();
+			break;
+		}
+		
 		driver.manage().window().maximize();
-		driver.manage().deleteAllCookies();
+		driver.get(prop.getProperty("appUrl"));
+		driver.manage().timeouts().pageLoadTimeout(Integer.parseInt(prop.getProperty("pageLoadTime")),TimeUnit.SECONDS);
+		driver.manage().deleteAllCookies();	
 	}
 
 	public void readPropertyFile() {

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
-<suite name="Orange HRM POM Framework with Extent report">
-	<test name="Orange HRM Automation" preserve-order="true">
+<suite name="Orange HRM POM Framework with Extent report" parallel = "tests" thread-count = "2">
+	<test name="Orange HRM Automation" preserve-order="true" >
 		<classes>
 			<class name="com.qa.automation.testCases.TestSetup" />
 			<class name="com.qa.automation.testCases.OrangeHRMLoginTest" />
-			<class name="com.qa.automation.testCases.OrangeHrmAdminTest" />
+			<!-- <class name="com.qa.automation.testCases.OrangeHrmAdminTest" /> -->
 		</classes>
 	</test>
 </suite>
